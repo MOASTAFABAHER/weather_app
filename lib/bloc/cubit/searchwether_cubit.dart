@@ -15,7 +15,7 @@ class SearchwetherCubit extends Cubit<SearchwetherState> {
     {
       emit(SearchLoadingState());
       DioHelper.getData(url: '/current.json', query: {
-        'key': '28ea1f3192604b2cbdd44726220812',
+        'key': '89b57ab3383c4fa986d82612220812',
         'q': 'cairo',
         'api': 'no'
       }).then((value) {

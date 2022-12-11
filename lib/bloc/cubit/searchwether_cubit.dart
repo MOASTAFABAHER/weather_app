@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
@@ -11,19 +13,20 @@ class SearchwetherCubit extends Cubit<SearchwetherState> {
   Request? request;
 
   static SearchwetherCubit get(context) => BlocProvider.of(context);
-  void getSearchData(String value) {
+   getSearchData(String value) {
     {
       emit(SearchLoadingState());
-      DioHelper.getData(url: '/current.json', query: {
-        'key': '89b57ab3383c4fa986d82612220812',
-        'q': 'cairo',
-        'api': 'no'
+      DioHelper.getData(query: {
+        'q': value,
+        'appid': '8f7c666b5cf89aad214338e6f7d04dd5',
       }).then((value) {
+      
         request = Request.fromJson(value.data);
         emit(SearchSuccesState());
         print('Suc');
       }).catchError((error) {
-        print(error);
+        print('Error =$error');
+        emit(SearchErrorState());
       });
     }
   }

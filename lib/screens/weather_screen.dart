@@ -16,13 +16,9 @@ class WeatherScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocProvider(
-        create: (context) => SearchwetherCubit(),
+        create: (context) => SearchwetherCubit()..getSearchData(searchValue!),
         child: BlocConsumer<SearchwetherCubit, SearchwetherState>(
-          listener: (context, state) {
-            if (state is SearchLoadingState) {
-              CircularProgressIndicator();
-            }
-          },
+          listener: (context, state) {},
           builder: (context, state) {
             var cubit = SearchwetherCubit.get(context);
             var feelsLike = cubit.request?.main!.feelsLike == null
@@ -40,147 +36,146 @@ class WeatherScreen extends StatelessWidget {
             var visibility = cubit.request?.visibility == null
                 ? 0
                 : ((cubit.request?.visibility)! / 1000).toStringAsFixed(0);
-            return Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: cubit.request?.main!.temp == null
-                          ? NetworkImage(
-                              'https://images.pexels.com/photos/1755683/pexels-photo-1755683.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-                            )
-                          : (cubit.request!.main!.temp!) - 273.4 > 20
-                              ? NetworkImage(
-                                  'https://images.pexels.com/photos/12440767/pexels-photo-12440767.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-                                )
-                              : (cubit.request!.main!.temp!) - 273.4 <= 20
-                                  ? NetworkImage(
-                                      'https://images.pexels.com/photos/1755683/pexels-photo-1755683.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')
-                                  : NetworkImage(''),
-                      fit: BoxFit.fill)),
-              child: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 20.h,
-                      ),
-                      Text(
-                        searchValue!,
-                        style: TextStyle(
-                            fontSize: 50.sp,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.krOrangeColor),
-                      ),
-                      Text(
-                        (cubit.request?.main!.temp) == null
-                            ? 'Null'
-                            : ((cubit.request!.main!.temp)! - 273)
-                                .toStringAsFixed(0),
-                        style: TextStyle(
-                            color: AppColors.krOrangeColor,
-                            fontSize: 60.sp,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "feels Like=$feelsLike",
-                        style: TextStyle(
-                            fontSize: 22.sp, color: AppColors.krOrangeColor),
-                      ),
-                      SizedBox(
-                        height: 5.h,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'min : $minTemp',
-                            style: TextStyle(
-                                fontSize: 18.sp,
-                                color: AppColors.krOrangeColor),
-                          ),
-                          SizedBox(
-                            width: 10.w,
-                          ),
-                          Text(
-                            'max : $tempMax',
-                            style: TextStyle(
-                                color: AppColors.krOrangeColor,
-                                fontSize: 18.sp),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 270.h,
-                      ),
-                      Container(
-                        height: 100.h,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            color: AppColors.krWhiteColor.withOpacity(0.2)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+            return state is SearchLoadingState
+                ? Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.krOrangeColor,
+                    ),
+                  )
+                : Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: cubit.request?.main!.temp == null
+                                ? NetworkImage(
+                                    'https://images.pexels.com/photos/1755683/pexels-photo-1755683.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+                                  )
+                                : (cubit.request!.main!.temp!) - 273.4 > 20
+                                    ? NetworkImage(
+                                        'https://images.pexels.com/photos/12440767/pexels-photo-12440767.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+                                      )
+                                    : (cubit.request!.main!.temp!) - 273.4 <= 20
+                                        ? NetworkImage(
+                                            'https://images.pexels.com/photos/1755683/pexels-photo-1755683.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')
+                                        : NetworkImage(''),
+                            fit: BoxFit.fill)),
+                    child: SafeArea(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                            SizedBox(
+                              height: 20.h,
+                            ),
+                            Text(
+                              searchValue!,
+                              style: TextStyle(
+                                  fontSize: 50.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.krOrangeColor),
+                            ),
+                            Text(
+                              (cubit.request?.main!.temp) == null
+                                  ? 'Null'
+                                  : ((cubit.request!.main!.temp)! - 273)
+                                      .toStringAsFixed(0),
+                              style: TextStyle(
+                                  color: AppColors.krOrangeColor,
+                                  fontSize: 60.sp,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              "feels Like=$feelsLike",
+                              style: TextStyle(
+                                  fontSize: 22.sp,
+                                  color: AppColors.krOrangeColor),
+                            ),
+                            SizedBox(
+                              height: 5.h,
+                            ),
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  speed.toString(),
+                                  'min : $minTemp',
                                   style: TextStyle(
                                       fontSize: 18.sp,
                                       color: AppColors.krOrangeColor),
                                 ),
+                                SizedBox(
+                                  width: 10.w,
+                                ),
                                 Text(
-                                  'Speed',
+                                  'max : $tempMax',
                                   style: TextStyle(
-                                      fontSize: 18.sp,
-                                      color: AppColors.krOrangeColor),
+                                      color: AppColors.krOrangeColor,
+                                      fontSize: 18.sp),
                                 )
                               ],
                             ),
                             SizedBox(
-                              width: 20.w,
-                            ),  
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '$visibility Km',
-                                  style: TextStyle(
-                                      fontSize: 18.sp,
-                                      color: AppColors.krOrangeColor),
-                                ),
-                                Text(
-                                  'visibility',
-                                  style: TextStyle(
-                                      fontSize: 18.sp,
-                                      color: AppColors.krOrangeColor),
-                                )
-                              ],
+                              height: 270.h,
+                            ),
+                            Container(
+                              height: 100.h,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  color:
+                                      AppColors.krWhiteColor.withOpacity(0.2)),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        speed.toString(),
+                                        style: TextStyle(
+                                            fontSize: 18.sp,
+                                            color: AppColors.krOrangeColor),
+                                      ),
+                                      Text(
+                                        'Speed',
+                                        style: TextStyle(
+                                            fontSize: 18.sp,
+                                            color: AppColors.krOrangeColor),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    width: 20.w,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        '$visibility Km',
+                                        style: TextStyle(
+                                            fontSize: 18.sp,
+                                            color: AppColors.krOrangeColor),
+                                      ),
+                                      Text(
+                                        'visibility',
+                                        style: TextStyle(
+                                            fontSize: 18.sp,
+                                            color: AppColors.krOrangeColor),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
                       ),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: FloatingActionButton(
-                          backgroundColor: AppColors.krOrangeColor,
-                          onPressed: () {
-                            print(searchValue);
-                            cubit.getSearchData(searchValue!);
-                          },
-                          child: Icon(Icons.replay_outlined),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            );
+                    ),
+                  );
           },
         ),
       ),
